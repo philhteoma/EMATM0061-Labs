@@ -51,10 +51,12 @@ Hawks %>%
 
 # Sample Variance = (1/n-1)*sum((Xi*a+b) - (a*mU+b))
 #                 =         .... aXi - amU
-#                 =              (Xi - mU) / a
+#                 =         .... (Xi - mU) / a
 #                 = (1/n-1) * sum((Xi - mU) / a)
 
 # stDev = sqrt of the above
+
+# Above is wrong, need to rework
 
 
 
