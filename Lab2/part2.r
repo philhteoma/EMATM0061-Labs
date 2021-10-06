@@ -60,6 +60,8 @@ arrange(hawksWithLowBMI, desc(Bird_BMI)) %>%
 
 hawksWithLowBMI %>% 
   ggplot(aes(x=Bird_BMI, y=Species, fill=Species)) +
+  xlim(0, 30) +
+  scale_x_continuous(trans='log2') +
   geom_violin()
 
 
