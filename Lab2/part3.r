@@ -59,4 +59,92 @@ Hawks %>%
 # Above is wrong, need to rework
 
 
+hal <- Hawks$Hallux[!is.na(Hawks$Hallux)]
+
+outlierVal <- 100
+numOutliers <- 10
+
+corruptedHal <- c(hal, rep(outlierVal, times=numOutliers))
+
+mean(hal)
+mean(corruptedHal)
+
+generateHalWithOutliers <- function(v) {
+  return ( c(hal, v))
+}
+
+mean(generateHalWithOutliers(seq(1000, 10)))
+mean(generateHalWithOutliers(seq(100, 1000)))
+mean(generateHalWithOutliers(seq(0, 1000)))
+
+numOutliers <- seq(0, 1000)
+meansVector <- vector("numeric")
+
+for (outliers in numOutliers) {
+  corruptedHal <- c(hal, rep(outlierVal, times=outliers))
+  meansVector <- c(meansVector, mean(corruptedHal))
+}
+
+tMeanVector <- vector("numeric")
+for (outliers in numOutliers) {
+  corruptedHal <- c(hal, rep(outlierVal, times=outliers))
+  tMeanVector <- c(tMeanVector, mean(corruptedHal, trim=0.1))
+}
+
+
+medianVector <- vector("numeric")
+for (outliers in numOutliers) {
+  corruptedHal <- c(hal, rep(outlierVal, times=outliers))
+  medianVector <- c(medianVector, median(corruptedHal))
+}
+
+meansVector
+medianVector
+tMeanVector
+
+dfMeansMedians <- data.frame(numOutliers=numOutliers, means=meansVector, medians=medianVector, tMeans=tMeanVector)
+
+dfMeansMedians
+
+dfMeansMedians %>% 
+  pivot_longer(!numOutliers, names_to="Estimator", values_to = "Value") %>% 
+  ggplot(aes(numOutliers, color=Estimator, linetype=Estimator, y=Value)) +
+  geom_line() + xlab("Number of Values")
+
+
+# Boxplot
+
+Hawks %>% 
+  ggplot(aes(x=Species, y=Weight)) +
+  geom_boxplot()
+
+
+num_outliers <- function(v) {
+  result <- c()
+  iqr <- IQR(v, na.rm=TRUE)
+  med <- median(v)
+  # firstQuartile <- median(v[1:floor(length(v)/2)])
+  # thirdQuartile <- median(v[ceiling(length(v)/2):length(v)])
+  q25 <- quantile(v, 0.25, na.rm=TRUE)
+  q75 <- quantile(v, 0.75, na.rm=TRUE)
+  lowOutlierBound <- q25 - 1.5*iqr
+  highOutlierBound <- q75 + 1.5*iqr
+  # print(lowOutlierBound)
+  # print(highOutlierBound)
+  for (i in v) {
+    if ((i < lowOutlierBound | i > highOutlierBound) & !is.na(i)) {
+      result <- c(result, i)
+    }
+  }
+  # print(result)
+  return (length(result))
+}
+
+num_outliers(c(-1000, 0, 1, 1, 1, 1, 2, 1000))
+
+
+
+Hawks %>% 
+  group_by(
+
 
