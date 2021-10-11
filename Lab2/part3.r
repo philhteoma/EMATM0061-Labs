@@ -145,6 +145,12 @@ num_outliers(c(-1000, 0, 1, 1, 1, 1, 2, 1000))
 
 
 Hawks %>% 
-  group_by(
+  group_by(Species) %>% 
+  summarise(
+    weight_outliers=num_outliers(Weight),
+    wing_outliers=num_outliers(Wing)
+    )
+
+
 
 
