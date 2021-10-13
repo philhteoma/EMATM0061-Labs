@@ -1,3 +1,9 @@
+# Custom alterations
+
+# Ignore excel files
+.xlsx
+
+
 # History files
 .Rhistory
 .Rapp.history
